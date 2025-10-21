@@ -1,0 +1,215 @@
+/* src/pages/FestivalDetailPage.css */
+
+.festival-detail-container .page-header {
+  border-bottom: 2px solid #eee;
+  padding-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.festival-detail-container h1 {
+  margin: 0;
+}
+
+.festival-management-sections {
+    margin-top: 30px;
+}
+
+.detail-page-controls {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.back-button {
+  text-decoration: none;
+  color: #007aff;
+  font-weight: bold;
+}
+
+.status-selector-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-selector-wrapper label {
+  font-weight: 600;
+  color: #555;
+}
+
+.status-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 2px solid;
+  font-weight: bold;
+  color: white;
+  text-transform: capitalize;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-position: right 10px center;
+  background-repeat: no-repeat;
+  background-size: 12px;
+  padding-right: 30px;
+}
+
+.status-proximo { background-color: #007aff; border-color: #005ecb; }
+.status-activo { background-color: #34c759; border-color: #2ca349; }
+.status-en-revision { background-color: #ff9500; border-color: #d67e00; }
+.status-finalizado { background-color: #8e8e93; border-color: #6c6c70; }
+
+.status-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+}
+
+.main-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-festival-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #f0f0f0;
+  color: #333;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.save-all-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #34c759;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+
+.audit-button {
+  padding: 10px 15px;
+  border: 1px solid #007aff;
+  background-color: transparent;
+  color: #007aff;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.audit-button:disabled {
+  border-color: #ccc;
+  color: #ccc;
+}
+
+/* src/pages/FestivalDetailPage.css */
+
+/* ... (todos tus estilos existentes) ... */
+
+.results-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap; /* Para que se ajusten en móviles */
+}
+
+/* 👇 NUEVO ESTILO (o modificado) para el botón principal */
+.generate-results-button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #007aff;
+  color: white;
+  border-radius: 6px;
+  font-size: 0.9rem; /* 👈 Más compacto */
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.generate-results-button:disabled {
+  background-color: #ccc;
+}
+
+/* 👇 MODIFICADO para ser más compacto */
+.audit-button {
+  padding: 10px 15px;
+  border: 1px solid #007aff;
+  background-color: transparent;
+  color: #007aff;
+  border-radius: 6px;
+  font-size: 0.9rem; /* 👈 Más compacto */
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.audit-button:disabled {
+  border-color: #ccc;
+  color: #ccc;
+}
+
+/* --- 👇 ADD THESE STYLES TO FestivalDetailPage.css 👇 --- */
+
+/* Container for the action groups */
+.results-actions-container {
+  display: flex; /* Arrange groups horizontally */
+  gap: 20px; /* Space between the groups */
+  align-items: flex-start; /* Align groups at the top */
+  flex-wrap: wrap; /* Allow groups to wrap on smaller screens */
+  margin-top: 15px;
+}
+
+/* Individual group for an action + its download button */
+.action-group {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 8px; /* Space between the main button and the download button */
+  align-items: stretch; /* Make buttons in the group have the same width */
+}
+
+/* Make sure main action buttons take full width within their group */
+.action-group .generate-results-button,
+.action-group .audit-button {
+  width: 100%;
+  box-sizing: border-box; /* Include padding/border in width */
+  text-align: center; /* Center text */
+}
+
+/* Style for the PDF download buttons (uses styles from your previous CSS) */
+.pdf-download-button {
+  padding: 8px 14px;
+  border: 1px solid #8e8e93;
+  background-color: #f9f9f9;
+  color: #333;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center text/icon */
+  gap: 6px;
+  width: 100%; /* Take full width within the group */
+  box-sizing: border-box;
+}
+
+/* Hover effect */
+.pdf-download-button:hover:not(:disabled) {
+  background-color: #eee;
+  border-color: #555;
+  color: #000;
+}
+
+/* Disabled style */
+.pdf-download-button:disabled {
+  border-color: #ccc;
+  color: #aaa;
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+/* --- END NEW STYLES --- */

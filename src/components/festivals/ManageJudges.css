@@ -1,0 +1,99 @@
+/* src/components/festivals/ManageJudges.css */
+
+.management-section {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+/* Botón simple de asignar */
+.button-primary-simple {
+  padding: 8px 12px;
+  border: none;
+  background-color: #007aff;
+  color: white;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.button-primary-simple:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Mensaje de advertencia */
+.lock-warning {
+  background-color: #fffbe6;
+  border: 1px solid #ffe58f;
+  color: #8a6d3b;
+  padding: 10px 15px;
+  margin: 15px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.judge-list {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.judge-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #f0f0f0;
+}
+
+.judge-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.judge-info strong {
+  font-size: 1.1rem;
+}
+.judge-info span {
+  font-size: 0.9rem;
+  color: #888;
+}
+.judge-info p {
+  margin: 5px 0 0 0;
+  font-size: 0.9rem;
+}
+
+.button-danger-simple {
+  padding: 8px 12px;
+  border: 1px solid #ff3b30;
+  background-color: transparent;
+  color: #ff3b30;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0; /* Evita que se encoja */
+}
+.button-danger-simple:disabled {
+  color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+}

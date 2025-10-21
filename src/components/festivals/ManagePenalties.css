@@ -1,0 +1,76 @@
+/* src/components/festivals/ManagePenalties.css */
+.manage-penalties-container {
+  background-color: #fff8f8; /* Un fondo rojizo claro */
+  border: 1px solid #ffc8c8;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 30px;
+}
+
+.manage-penalties-container h3 {
+  color: #d93025; /* Rojo oscuro */
+}
+
+.penalty-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.penalty-apply {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.apply-penalty-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  background-color: #d93025;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.apply-penalty-button:disabled {
+  background-color: #8e8e93;
+}
+
+.penalty-log h4 {
+  margin-top: 0;
+}
+
+.penalty-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.penalty-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #eee;
+}
+
+.delete-button-small {
+  background: none;
+  border: none;
+  color: #d93025;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* Adaptación para móviles */
+@media (max-width: 768px) {
+  .penalty-content {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,150 @@
+/* src/pages/ManageTemplatesPage.css */
+
+.manage-templates-container .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.manage-templates-container .page-header h1 {
+  margin: 0;
+}
+
+.save-template-button {
+  padding: 10px 20px;
+  background-color: #34c759; /* Un verde para guardar */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-template-button:hover {
+  background-color: #2ca349;
+}
+
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* --- ESTILOS NUEVOS PARA LAS TARJETAS --- */
+
+/* Tarjeta Principal de Categoría */
+.category-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Encabezado común para todas las tarjetas */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+}
+.card-header h3, .card-header h4 {
+  margin: 0;
+  flex-grow: 1; /* El título ocupa el espacio sobrante */
+}
+.card-header span {
+  margin: 0 20px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Contenido de las tarjetas */
+.card-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Tarjeta de Subcategoría (anidada) */
+.subcategory-card {
+  background-color: #ffffff;
+  border: 1px solid #ececec;
+  border-radius: 6px;
+}
+
+/* Item de Criterio */
+.criterion-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  background-color: #fdfdfd;
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+}
+.criterion-score {
+  font-weight: bold;
+  color: #007aff;
+}
+
+/* Botones de acción pequeños */
+.button-edit-small {
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.button-add-small, .button-add-full {
+  padding: 8px 12px;
+  border: 1px dashed #ccc;
+  border-radius: 5px;
+  background-color: transparent;
+  cursor: pointer;
+  color: #555;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.button-add-small:hover, .button-add-full:hover {
+  background-color: #f0f2f5;
+  color: #000;
+  border-color: #aaa;
+}
+.button-add-full {
+  padding: 15px;
+  font-size: 1.1rem;
+}
+
+/* Añadir al final de ManageTemplatesPage.css */
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.button-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 5px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-action.edit:hover {
+  background-color: #e0e0e0;
+}
+.button-action.delete:hover {
+  background-color: #ffe0e0;
+  color: #ff3b30;
+}

@@ -1,0 +1,48 @@
+/* src/components/festivals/RankingDisplay.css */
+
+.ranking-container {
+  background-color: #f9f9f9; /* Un fondo más suave */
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px 15px; /* 👈 Más compacto */
+}
+.ranking-container h4 {
+  margin: 0 0 8px 0; /* 👈 Más compacto */
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+  font-size: 1rem; /* 👈 Más compacto */
+}
+.ranking-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+.ranking-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0; /* 👈 Más compacto */
+  font-size: 0.9rem; /* 👈 Más compacto */
+  gap: 10px;
+}
+.ranking-position {
+  font-weight: bold;
+  font-size: 1rem; /* 👈 Más compacto */
+  flex-shrink: 0;
+  width: 25px; /* 👈 Más compacto */
+}
+.ranking-position.ranking-1 { color: #af8700; } /* Oro */
+.ranking-position.ranking-2 { color: #767676; } /* Plata */
+.ranking-position.ranking-3 { color: #8c5e2a; } /* Bronce */
+
+.ranking-name {
+  font-weight: 500;
+  flex-grow: 1;
+}
+.ranking-score {
+  font-weight: bold;
+  color: #007aff;
+  flex-shrink: 0;
+  font-size: 0.95rem; /* 👈 Más compacto */
+}
+.ranking-list li:nth-child(1) .ranking-name { font-weight: bold; }

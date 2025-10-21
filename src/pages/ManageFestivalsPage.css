@@ -1,0 +1,101 @@
+/* src/pages/ManageFestivalsPage.css */
+.manage-festivals-container .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.manage-festivals-container h1 {
+  margin: 0;
+}
+
+.create-festival-button {
+  padding: 10px 20px;
+  background-color: #007aff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.festivals-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.festival-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.festival-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #eee;
+}
+
+.festival-card-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: white;
+  text-transform: capitalize;
+}
+
+.status-proximo { background-color: #007aff; }
+.status-activo { background-color: #34c759; }
+.status-cerrado { background-color: #8e8e93; }
+.status-en-revision { background-color: #ff9500; }
+
+.festival-card-body {
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.festival-card-body p {
+  margin: 0 0 10px 0;
+}
+
+.festival-card-footer {
+  padding: 15px 20px;
+  text-align: right;
+  border-top: 1px solid #eee;
+}
+
+.festival-card-footer button {
+  padding: 8px 16px;
+  border: 1px solid #007aff;
+  background-color: transparent;
+  color: #007aff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.manage-button {
+  padding: 8px 16px;
+  border: 1px solid #007aff;
+  background-color: transparent;
+  color: #007aff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none; /* Para quitar el subrayado del enlace */
+}

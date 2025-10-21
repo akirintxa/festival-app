@@ -1,0 +1,99 @@
+/* src/components/festivals/ManageSchools.css */
+.manage-schools-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.schools-list {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 10px;
+  min-height: 100px;
+}
+
+.school-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+}
+
+.school-order {
+  font-weight: bold;
+  color: #8e8e93;
+  margin-right: 15px;
+}
+
+.school-name {
+  flex-grow: 1;
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #8e8e93;
+}
+
+.schools-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.add-school-button, .save-order-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.add-school-button {
+  background-color: #007aff;
+  color: white;
+}
+
+.save-order-button {
+  background-color: #34c759;
+  color: white;
+}
+
+/* Añadir al final de src/components/festivals/ManageSchools.css */
+
+.add-school-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.add-school-form input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.add-school-form button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  background-color: #007aff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.instructions {
+  font-size: 0.9rem;
+  color: #8e8e93;
+  margin-bottom: 10px;
+}

@@ -1,0 +1,57 @@
+/* src/pages/ManageUsersPage.css */
+.manage-users-container h1 {
+  color: #1c1c1e;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden; /* Para que el border-radius afecte a la tabla */
+}
+
+.users-table th, .users-table td {
+  padding: 15px 20px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.users-table thead {
+  background-color: #f7f7f7;
+}
+
+.users-table th {
+  font-weight: 600;
+  color: #555;
+}
+
+.users-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.users-table tbody tr:hover {
+  background-color: #fafafa;
+}
+
+.action-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  margin-right: 5px;
+  font-size: 0.9rem;
+}
+
+.action-button.edit {
+  background-color: #007aff;
+}
+
+.action-button.delete {
+  background-color: #ff3b30;
+}
