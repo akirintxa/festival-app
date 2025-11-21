@@ -3,6 +3,7 @@ import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './SuperAdminLayout.css'; // Crearemos este archivo CSS ahora
+import '../styles/SharedStyles.css';
 
 const Sidebar = () => {
   const { logout } = useAuth();
@@ -30,7 +31,7 @@ const Sidebar = () => {
         <NavLink to="/superadmin/dashboard">Dashboard</NavLink>
       </nav>
       <div className="sidebar-footer">
-        <button onClick={handleLogout} className="logout-button">Cerrar Sesión</button>
+        <button onClick={handleLogout} className="btn btn-danger" style={{ width: '100%' }}>Cerrar Sesión</button>
       </div>
     </div>
   );

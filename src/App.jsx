@@ -4,19 +4,29 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import './App.css';
 
+// --- Páginas Públicas ---
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
+
+// --- Componentes de Ruteo ---
 import RoleRouter from './components/RoleRouter.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+
+// --- Layouts ---
 import SuperAdminLayout from './layouts/SuperAdminLayout.jsx';
+// AdminLayout ya no se usa
+
+// --- Páginas SuperAdmin ---
 import ManageUsersPage from './pages/ManageUsersPage.jsx';
 import ManageTemplatesPage from './pages/ManageTemplatesPage.jsx';
 import ManageFestivalsPage from './pages/ManageFestivalsPage.jsx';
-import FestivalDetailPage from './pages/FestivalDetailPage.jsx';
 import ManagePenaltyTemplatesPage from './pages/ManagePenaltyTemplatesPage.jsx';
+import FestivalDetailPage from './pages/FestivalDetailPage.jsx'; // Usado solo por SuperAdmin
+
+// --- Páginas Juez ---
 import JuezFestivalPage from './pages/JuezFestivalPage.jsx';
 
-const SuperAdminHome = () => <div className="manage-users-container"><h1>Bienvenido, Superadmin</h1></div>;
+const SuperAdminHome = () => <div className="manage-users-container"><h1>Bienvenido, Superadmin</h1><p>Usa el menú lateral para navegar.</p></div>;
 
 function App() {
   return (
@@ -27,10 +37,10 @@ function App() {
           <Route path="/login" element={<div className="app-container"><LoginPage /></div>} />
           <Route path="/register" element={<div className="app-container"><RegisterPage /></div>} />
 
-          {/* --- RUTAS PROTEGIDAS PRINCIPALES --- */}
+          {/* --- RUTA PROTEGIDA PRINCIPAL (Redirige según rol) --- */}
           <Route path="/" element={<ProtectedRoute><RoleRouter /></ProtectedRoute>} />
           
-          {/* 👇 RUTA PARA LA VISTA DEL JUEZ (AHORA ESTÁ EN EL LUGAR CORRECTO) 👇 */}
+          {/* --- RUTA VISTA JUEZ --- */}
           <Route 
             path="/festival/:festivalId" 
             element={<ProtectedRoute><div className="app-container"><JuezFestivalPage /></div></ProtectedRoute>}
@@ -39,16 +49,19 @@ function App() {
           {/* --- RUTAS ANIDADAS DEL SUPERADMIN --- */}
           <Route
             path="/superadmin"
-            element={<ProtectedRoute><SuperAdminLayout /></ProtectedRoute>}
+            element={<ProtectedRoute requiredRole="superadmin"><SuperAdminLayout /></ProtectedRoute>}
           >
+            <Route index element={<SuperAdminHome />} />
             <Route path="dashboard" element={<SuperAdminHome />} />
             <Route path="usuarios" element={<ManageUsersPage />} />
             <Route path="plantillas" element={<ManageTemplatesPage />} />
             <Route path="festivales" element={<ManageFestivalsPage />} />
             <Route path="penalizaciones" element={<ManagePenaltyTemplatesPage />} />
-            {/* Esta es la vista de detalle del festival para el ADMIN, es diferente a la del juez */}
             <Route path="festival/:festivalId" element={<FestivalDetailPage />} />
           </Route>
+
+          {/* --- RUTAS ADMIN ELIMINADAS --- */}
+
         </Routes>
       </Router>
     </AuthProvider>

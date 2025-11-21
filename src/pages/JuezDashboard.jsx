@@ -8,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BsCalendarEvent } from "react-icons/bs";
 import { IoMdLogOut } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
-
+import '../styles/SharedStyles.css';
 import './JuezDashboard.css';
 
 // --- 2. Helper para formatear el estatus ---
@@ -32,10 +32,10 @@ export default function JuezDashboard() {
       setLoading(true);
       try {
         const assignmentsQuery = query(
-          collection(db, "festivales"), 
+          collection(db, "festivales"),
           where("juecesAsignadosIds", "array-contains", currentUser.uid)
         );
-        
+
         const querySnapshot = await getDocs(assignmentsQuery);
         const festivals = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         // Ordenar festivales por fecha, los más nuevos primero
@@ -73,18 +73,18 @@ export default function JuezDashboard() {
           <span className="judge-name-display">{userProfile?.nombre || userProfile?.email}</span>
         </div>
         {/* --- 3. Añadir icono al botón --- */}
-        <button onClick={handleLogout} className="logout-button-juez">
+        <button onClick={handleLogout} className="btn btn-danger" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <IoMdLogOut /> Cerrar Sesión
         </button>
       </div>
 
       {assignedFestivals.length > 0 ? (
-        <div className="festivals-grid">
+        <div className="data-grid">
           {assignedFestivals.map(festival => (
-            <Link to={`/festival/${festival.id}`} key={festival.id} className="festival-link-card">
-              
+            <Link to={`/festival/${festival.id}`} key={festival.id} className="data-card" style={{ borderLeft: '4px solid #007aff', textDecoration: 'none', color: 'inherit' }}>
+
               {/* --- 4. Contenido principal de la tarjeta --- */}
-              <div className="card-content">
+              <div className="data-card-body">
                 <h3>{festival.nombre}</h3>
                 <p className="card-date">
                   <BsCalendarEvent />
@@ -93,7 +93,7 @@ export default function JuezDashboard() {
               </div>
 
               {/* --- 5. Pie de la tarjeta (estatus y flecha) --- */}
-              <div className="card-footer">
+              <div className="data-card-footer" style={{ justifyContent: 'space-between' }}>
                 <span className={`status-badge status-${festival.estatus}`}>
                   {formatStatus(festival.estatus)}
                 </span>

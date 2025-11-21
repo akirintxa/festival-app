@@ -1,8 +1,9 @@
 // src/pages/FestivalDetailPage.jsx
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom'; // No necesitamos useNavigate aquí
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+// Ya no necesitamos useAuth aquí
 import ManageSchools from '../components/festivals/ManageSchools';
 import ManageJudges from '../components/festivals/ManageJudges';
 import ManagePenalties from '../components/festivals/ManagePenalties';
@@ -19,12 +20,17 @@ export default function FestivalDetailPage() {
   const [loading, setLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isJudgeModalOpen, setIsJudgeModalOpen] = useState(false);
-  const [recalcTrigger, setRecalcTrigger] = useState(0); 
+  const [recalcTrigger, setRecalcTrigger] = useState(0);
   const { festivalId } = useParams();
-  
-  // Estado para saber si los jueces están "bloqueados"
-  const judgesAreLocked = festival?.estatus !== 'proximo';
 
+  // --- PERMISOS SIMPLIFICADOS ---
+  // Quien ve esta página es Superadmin, pero aún respetamos el estatus
+  const canManageParticipants = festival?.estatus === 'proximo';
+  const canManagePenalties = festival?.estatus === 'en-revision';
+  const canViewResults = ['en-revision', 'finalizado'].includes(festival?.estatus);
+  // --- FIN PERMISOS ---
+
+  // --- useEffect SIMPLIFICADO ---
   useEffect(() => {
     const fetchFestivalData = async () => {
       if (!festivalId) return;
@@ -40,6 +46,9 @@ export default function FestivalDetailPage() {
           setAssignedJudges(festivalData.juecesAsignadosData || []);
         } else {
           console.error("No se encontró el festival.");
+          alert("Festival no encontrado.");
+          // navigate a /superadmin/festivales (ya no es dinámico)
+          // No podemos usar navigate sin el hook, pero Link funcionará
         }
 
         const templateSnap = await getDoc(doc(db, "plantillaEvaluacion", "v1"));
@@ -48,7 +57,6 @@ export default function FestivalDetailPage() {
         } else {
           console.error("No se encontró la plantilla de evaluación.");
         }
-
       } catch (error) {
         console.error("Error al obtener datos:", error);
       } finally {
@@ -56,125 +64,109 @@ export default function FestivalDetailPage() {
       }
     };
     fetchFestivalData();
-  }, [festivalId]);
+  }, [festivalId]); // Dependencias simplificadas
+  // --- FIN useEffect ---
 
-  // --- LÓGICA DE GESTIÓN DEL FESTIVAL ---
+  // --- LÓGICA DE GESTIÓN (SIN CHEQUEOS DE ROL) ---
+
   const handleStatusChange = async (newStatus) => {
     if (!festival) return;
-    
-    // Alerta si se intenta bloquear jueces con cambios pendientes
     if (newStatus !== 'proximo' && festival.estatus === 'proximo') {
-         if (!window.confirm("¡Atención! Al cambiar el estatus a 'Activo' o superior, se bloqueará la asignación de jueces. ¿Deseas continuar?")) {
-            return; // El usuario canceló
-         }
+      if (!window.confirm("¡Atención! Al cambiar el estatus, se bloqueará la gestión de colegios y jueces. ¿Deseas continuar?")) return;
     }
-    
     try {
       const festivalDocRef = doc(db, 'festivales', festival.id);
       await updateDoc(festivalDocRef, { estatus: newStatus });
       setFestival({ ...festival, estatus: newStatus });
       alert('¡Estatus actualizado con éxito!');
-    } catch (error) {
-      console.error("Error al actualizar el estatus:", error);
-    }
+    } catch (error) { console.error("Error al actualizar el estatus:", error); }
   };
 
   const handleSaveFestival = async (updatedData) => {
     try {
-        const festivalDocRef = doc(db, 'festivales', festivalId);
-        await updateDoc(festivalDocRef, updatedData);
-        setFestival({ ...festival, ...updatedData });
-        setIsEditModalOpen(false);
-        alert('¡Datos del festival actualizados!');
-    } catch (error) {
-        console.error("Error al actualizar el festival:", error);
-    }
+      const festivalDocRef = doc(db, 'festivales', festivalId);
+      await updateDoc(festivalDocRef, updatedData);
+      setFestival({ ...festival, ...updatedData });
+      setIsEditModalOpen(false);
+      alert('¡Datos del festival actualizados!');
+    } catch (error) { console.error("Error al actualizar el festival:", error); }
   };
 
-  // --- LÓGICA DE GESTIÓN DE COLEGIOS ---
+  // Colegios
   const handleOrderChange = (newOrder) => setSchools(newOrder);
-
   const handleSchoolAdd = (schoolName) => {
+    if (!canManageParticipants) {
+      alert("No se pueden añadir colegios en este estado del festival.");
+      return;
+    }
     const newSchool = { id: `colegio_${Date.now()}`, nombre: schoolName };
     setSchools([...schools, newSchool]);
   };
-  
   const handleDeleteSchool = (schoolIdToDelete) => {
+    if (!canManageParticipants) {
+      alert("No se pueden eliminar colegios en este estado del festival.");
+      return;
+    }
     if (window.confirm("¿Seguro que quieres eliminar este colegio del festival?")) {
-        setSchools(schools.filter(school => school.id !== schoolIdToDelete));
+      setSchools(schools.filter(school => school.id !== schoolIdToDelete));
     }
   };
 
-  // --- LÓGICA DE GESTIÓN DE JUECES ---
+  // Jueces
   const handleAssignJudge = (newJudge) => {
-    if (judgesAreLocked) {
-        alert("Error: No se pueden asignar jueces porque el festival ya no está en estatus 'Próximo'.");
-        return;
+    if (!canManageParticipants) {
+      alert("Error: No se pueden asignar jueces en este estado del festival.");
+      return;
     }
     setAssignedJudges([...assignedJudges, newJudge]);
     setIsJudgeModalOpen(false);
   };
-  
   const handleDeleteJudge = (judgeIdToDelete) => {
-    if (judgesAreLocked) {
-        alert("Error: No se pueden eliminar jueces porque el festival ya no está en estatus 'Próximo'.");
-        return;
+    if (!canManageParticipants) {
+      alert("Error: No se pueden eliminar jueces en este estado del festival.");
+      return;
     }
     if (window.confirm("¿Seguro que quieres desasignar a este juez del festival?")) {
-        setAssignedJudges(assignedJudges.filter(j => j.juezId !== judgeIdToDelete));
+      setAssignedJudges(assignedJudges.filter(j => j.juezId !== judgeIdToDelete));
     }
   };
 
-  // --- LÓGICA DE GUARDADO GENERAL (MODIFICADA) ---
+  // Guardado General
   const handleSaveChanges = async () => {
     try {
       const festivalDocRef = doc(db, 'festivales', festivalId);
-      
-      let dataToUpdate = {
-        colegios: schools, // Los colegios siempre se guardan (para el orden)
-      };
-
-      // ¡BLOQUEO! Solo actualizamos jueces si el festival está "Próximo"
-      if (!judgesAreLocked) {
+      let dataToUpdate = { colegios: schools };
+      if (canManageParticipants) {
         const judgeIds = assignedJudges.map(j => j.juezId);
         dataToUpdate.juecesAsignadosData = assignedJudges;
         dataToUpdate.juecesAsignadosIds = judgeIds;
         alert('¡Cambios en Colegios y Jueces guardados con éxito!');
       } else {
-        alert('¡Cambios en Colegios guardados con éxito! (La asignación de jueces está bloqueada).');
+        alert('¡Cambios en Colegios guardados con éxito! (La gestión de jueces está bloqueada).');
       }
-
       await updateDoc(festivalDocRef, dataToUpdate);
-      
     } catch (error) {
       console.error("Error al guardar:", error);
       alert('Hubo un error al guardar los cambios.');
     }
   };
 
-  // --- LÓGICA PARA RECALCULAR RESULTADOS ---
-  const handlePenaltiesChanged = () => {
-    setRecalcTrigger(prev => prev + 1); 
-  };
+  const handlePenaltiesChanged = () => setRecalcTrigger(prev => prev + 1);
 
+  // --- Renderizado ---
   if (loading || !plantilla) return <h2>Cargando festival...</h2>;
+  if (!festival) return <h2>Festival no encontrado.</h2>;
 
-  if (!festival) {
-    return (
-      <div className="manage-templates-container">
-        <div className="page-header"><h2>Festival no encontrado</h2></div>
-        <Link to="/superadmin/festivales" className="back-button">← Volver a la lista</Link>
-      </div>
-    );
-  }
+  // Enlace "Volver" fijo para Superadmin
+  const backLink = "/superadmin/festivales";
 
   return (
     <div className="festival-detail-container">
       <div className="detail-page-controls">
-        <Link to="/superadmin/festivales" className="back-button">← Volver a la lista</Link>
+        <Link to={backLink} className="back-button">← Volver</Link>
         <div className="main-actions">
-            <button className="edit-festival-button" onClick={() => setIsEditModalOpen(true)}>Editar Festival</button>
-            <button className="save-all-button" onClick={handleSaveChanges}>Guardar Cambios</button>
+          <button className="edit-festival-button" onClick={() => setIsEditModalOpen(true)}>Editar Festival</button>
+          <button className="save-all-button" onClick={handleSaveChanges}>Guardar Cambios</button>
         </div>
       </div>
 
@@ -182,11 +174,12 @@ export default function FestivalDetailPage() {
         <h1>{festival.nombre}</h1>
         <div className="status-selector-wrapper">
           <label htmlFor="status-select">Estatus:</label>
-          <select 
+          <select
             id="status-select"
             value={festival.estatus}
             onChange={(e) => handleStatusChange(e.target.value)}
             className={`status-select status-${festival.estatus}`}
+          // El selector ahora siempre está habilitado
           >
             <option value="proximo">Próximo</option>
             <option value="activo">Activo</option>
@@ -197,35 +190,34 @@ export default function FestivalDetailPage() {
       </div>
       <p><strong>Fecha:</strong> {new Date(festival.fecha).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</p>
       <p><strong>Lugar:</strong> {festival.lugar}</p>
-      
+      {festival.createdBy && <p><small>Creado por UID: {festival.createdBy}</small></p>} {/* Mantenemos esto como info útil */}
+
       <div className="festival-management-sections">
-        <ManageSchools 
-            schools={schools} 
-            onOrderChange={handleOrderChange}
-            onSchoolAdd={handleSchoolAdd}
-            onDeleteSchool={handleDeleteSchool}
+        <ManageSchools
+          schools={schools}
+          onOrderChange={handleOrderChange}
+          onSchoolAdd={handleSchoolAdd}
+          onDeleteSchool={handleDeleteSchool}
+          isLocked={!canManageParticipants}
         />
-        <ManageJudges 
-            assignedJudges={assignedJudges}
-            plantilla={plantilla}
-            onAssign={() => setIsJudgeModalOpen(true)}
-            onDelete={handleDeleteJudge}
-            // 👇 PASAMOS EL PROP DE BLOQUEO
-            isLocked={judgesAreLocked} 
+        <ManageJudges
+          assignedJudges={assignedJudges}
+          plantilla={plantilla}
+          onAssign={() => setIsJudgeModalOpen(true)}
+          onDelete={handleDeleteJudge}
+          isLocked={!canManageParticipants}
         />
-        
-        {festival.estatus === 'en-revision' && (
-          <ManagePenalties 
-            festival={festival} 
-            colegios={schools} 
+        {canManagePenalties && (
+          <ManagePenalties
+            festival={festival}
+            colegios={schools}
             onPenaltiesChanged={handlePenaltiesChanged}
           />
         )}
-        
-        {(festival.estatus === 'en-revision' || festival.estatus === 'finalizado') && (
-          <ResultsPanel 
-            festival={festival} 
-            plantilla={plantilla} 
+        {canViewResults && (
+          <ResultsPanel
+            festival={festival}
+            plantilla={plantilla}
             recalcTrigger={recalcTrigger}
           />
         )}
@@ -233,13 +225,13 @@ export default function FestivalDetailPage() {
 
       {isEditModalOpen && (
         <EditFestivalModal
-            festival={festival}
-            onSave={handleSaveFestival}
-            onClose={() => setIsEditModalOpen(false)}
+          festival={festival}
+          onSave={handleSaveFestival}
+          onClose={() => setIsEditModalOpen(false)}
         />
       )}
 
-      {isJudgeModalOpen && (
+      {isJudgeModalOpen && canManageParticipants && (
         <AssignJudgeModal
           alreadyAssignedIds={assignedJudges.map(j => j.juezId)}
           onSave={handleAssignJudge}

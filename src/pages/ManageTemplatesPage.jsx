@@ -4,7 +4,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import CategoryCard from '../components/templates/CategoryCard';
 import AddCategoryModal from '../components/modals/AddCategoryModal';
-import './ManageTemplatesPage.css';
+import '../styles/SharedStyles.css';
 
 export default function ManageTemplatesPage() {
   const [template, setTemplate] = useState(null);
@@ -67,15 +67,15 @@ export default function ManageTemplatesPage() {
   }
 
   return (
-    <div className="manage-templates-container">
-      <div className="page-header">
+    <div className="page-container">
+      <div className="page-header-container">
         <h1>Gestionar Plantilla de Evaluación</h1>
-        <button className="save-template-button" onClick={handleSaveChanges}>
+        <button className="btn btn-success" onClick={handleSaveChanges}>
           Guardar Cambios
         </button>
       </div>
 
-      <div className="categories-list">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {template && Array.isArray(template.categorias) ? (
           template.categorias.map((category, index) => (
             <CategoryCard
@@ -89,15 +89,15 @@ export default function ManageTemplatesPage() {
         ) : (
           <p>No hay categorías definidas en la plantilla.</p>
         )}
-        <button className="button-add-full" onClick={() => setIsModalOpen(true)}>
+        <button className="btn btn-primary" onClick={() => setIsModalOpen(true)} style={{ width: '100%', marginTop: '20px' }}>
           + Añadir Nueva Categoría
         </button>
       </div>
 
       {isModalOpen && (
-        <AddCategoryModal 
-          onSave={handleAddCategory} 
-          onClose={() => setIsModalOpen(false)} 
+        <AddCategoryModal
+          onSave={handleAddCategory}
+          onClose={() => setIsModalOpen(false)}
         />
       )}
     </div>

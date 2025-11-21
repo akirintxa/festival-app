@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import AddPenaltyTemplateModal from '../components/modals/AddPenaltyTemplateModal';
-import EditPenaltyTemplateModal from '../components/modals/EditPenaltyTemplateModal'; // 👈 1. Importa el nuevo modal
-import './ManageUsersPage.css'; // Reutilizamos estilos
+import EditPenaltyTemplateModal from '../components/modals/EditPenaltyTemplateModal';
+import '../styles/SharedStyles.css';
 
 export default function ManagePenaltyTemplatesPage() {
   const [plantillas, setPlantillas] = useState([]);
@@ -37,13 +37,13 @@ export default function ManagePenaltyTemplatesPage() {
     if (window.confirm("¿Seguro que quieres borrar esta plantilla de penalización?")) {
       try {
         await deleteDoc(doc(db, "plantillasPenalizacion", id));
-        fetchPlantillas(); 
+        fetchPlantillas();
       } catch (error) {
         console.error("Error al borrar:", error);
       }
     }
   };
-  
+
   // 👇 3. Nueva función para ABRIR el modal de EDICIÓN
   const handleOpenEditModal = (template) => {
     setCurrentTemplateToEdit(template); // Guarda la plantilla que se clickeó
@@ -61,49 +61,51 @@ export default function ManagePenaltyTemplatesPage() {
   }
 
   return (
-    <div className="manage-users-container"> {/* Usando tu clase */}
-      <div className="page-header">
+    <div className="page-container">
+      <div className="page-header-container">
         <h1>Gestionar Penalizaciones</h1>
-        <button className="create-user-button" onClick={() => setIsAddModalOpen(true)}>+ Crear Penalización</button>
+        <button className="btn btn-primary" onClick={() => setIsAddModalOpen(true)}>+ Crear Penalización</button>
       </div>
-      <table className="users-table"> {/* Usando tu clase */}
-        <thead>
-          <tr>
-            <th>Nombre de la Penalización</th>
-            <th>Deducciones</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {plantillas.map(plantilla => (
-            <tr key={plantilla.id}>
-              <td>{plantilla.nombre}</td>
-              <td>{formatDeducciones(plantilla.deducciones)}</td>
-              <td>
-                {/* 👇 4. Botón EDITAR llama a la nueva función */}
-                <button 
-                  className="action-button edit" 
-                  onClick={() => handleOpenEditModal(plantilla)} // Pasa la plantilla actual
-                >
-                  Editar
-                </button>
-                <button 
-                  onClick={() => handleDelete(plantilla.id)} 
-                  className="action-button delete"
-                >
-                  Borrar
-                </button>
-              </td>
+      <div className="data-table-container">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Nombre de la Penalización</th>
+              <th>Deducciones</th>
+              <th>Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {plantillas.map(plantilla => (
+              <tr key={plantilla.id}>
+                <td>{plantilla.nombre}</td>
+                <td>{formatDeducciones(plantilla.deducciones)}</td>
+                <td>
+                  <button
+                    className="btn btn-sm btn-outline-primary"
+                    onClick={() => handleOpenEditModal(plantilla)}
+                    style={{ marginRight: '5px' }}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleDelete(plantilla.id)}
+                    className="btn btn-sm btn-danger"
+                  >
+                    Borrar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Modal para AÑADIR */}
       {isAddModalOpen && (
         <AddPenaltyTemplateModal
           onClose={() => setIsAddModalOpen(false)}
-          onSave={fetchPlantillas} 
+          onSave={fetchPlantillas}
         />
       )}
 

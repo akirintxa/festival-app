@@ -5,7 +5,7 @@ import { db } from '../firebaseConfig';
 import CreateUserModal from '../components/modals/CreateUserModal';
 import EditUserRoleModal from '../components/modals/EditUserRoleModal';
 import ConfirmDeleteModal from '../components/modals/ConfirmDeleteModal';
-import './ManageUsersPage.css';
+import '../styles/SharedStyles.css';
 
 export default function ManageUsersPage() {
   const [users, setUsers] = useState([]);
@@ -86,47 +86,50 @@ export default function ManageUsersPage() {
   }
 
   return (
-    <div className="manage-users-container">
-      <div className="page-header">
+    <div className="page-container">
+      <div className="page-header-container">
         <h1>Gestionar Usuarios</h1>
-        <button className="create-user-button" onClick={() => setIsCreateModalOpen(true)}>
+        <button className="btn btn-primary" onClick={() => setIsCreateModalOpen(true)}>
           + Crear Usuario
         </button>
       </div>
 
-      <table className="users-table">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Correo Electrónico</th>
-            <th>Rol</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(user => (
-            <tr key={user.id}>
-              <td>{user.nombre}</td>
-              <td>{user.email}</td>
-              <td>{user.rol}</td>
-              <td>
-                <button
-                  className="action-button edit"
-                  onClick={() => handleEditClick(user)}
-                >
-                  Editar
-                </button>
-                <button
-                  className="action-button delete"
-                  onClick={() => handleDeleteClick(user)}
-                >
-                  Borrar
-                </button>
-              </td>
+      <div className="data-table-container">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo Electrónico</th>
+              <th>Rol</th>
+              <th>Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map(user => (
+              <tr key={user.id}>
+                <td>{user.nombre}</td>
+                <td>{user.email}</td>
+                <td>{user.rol}</td>
+                <td>
+                  <button
+                    className="btn btn-sm btn-outline-primary"
+                    onClick={() => handleEditClick(user)}
+                    style={{ marginRight: '5px' }}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => handleDeleteClick(user)}
+                  >
+                    Borrar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {isCreateModalOpen && (
         <CreateUserModal

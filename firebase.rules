@@ -28,8 +28,9 @@ service cloud.firestore {
              get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol == 'superadmin';
     }
 
-    // --- REGLAS SEGURAS (PARA CASI TODO) ---
+    // --- REGLAS SEGURAS (FINALES) ---
 
+    // (Usuarios, Plantillas, Festivales, etc. se quedan igual que antes)
     match /usuarios/{userId} {
       allow read, write: if isSuperAdmin() || (request.auth != null && request.auth.uid == userId);
     }
@@ -49,11 +50,25 @@ service cloud.firestore {
       allow read, write: if isSuperAdmin();
     }
     
-    // --- REGLA DE DEPURACIÓN SOLO PARA EVALUACIONES ---
-    // Esto nos permite confirmar que el problema está aislado
-    // únicamente en esta colección.
-    match /evaluaciones/{document=**} {
-      allow read, write: if request.auth != null;
+    // --- REGLA FINAL PARA EVALUACIONES ---
+    // Esta regla combina la simplicidad de la prueba
+    // con la seguridad de la lógica de roles.
+
+    match /evaluaciones/{evalId} {
+      
+      // LEER (get y list):
+      // Un juez puede leer (get/list) CUALQUIER evaluación.
+      // Y un admin también.
+      // (Esto soluciona AMBOS errores: el de la página y el del formulario)
+      allow read: if request.auth != null;
+
+      // ESCRIBIR (create, update):
+      // Solo puedes escribir si:
+      allow write: if
+        // 1. Eres un SuperAdmin
+        isSuperAdmin() ||
+        // 2. O si el 'juezId' en el NUEVO documento es el tuyo.
+        (request.auth != null && request.resource.data.juezId == request.auth.uid);
     }
   }
 }

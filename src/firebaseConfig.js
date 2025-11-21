@@ -6,7 +6,7 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage"; // <--- 1. Agrega esta línea
 
 // Tu configuración de Firebase
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyDxsIVi9_n1BonzYMNgd3_6RcdsuG2B4To",
   authDomain: "festival-gaitas-app.firebaseapp.com",
   projectId: "festival-gaitas-app",
