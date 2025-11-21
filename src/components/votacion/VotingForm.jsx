@@ -5,13 +5,13 @@ import { db } from '../../firebaseConfig';
 import { useAuth } from '../../context/AuthContext';
 import './VotingForm.css';
 
-export default function VotingForm({ festival, school, onVoteSaved, onClose }) { 
+export default function VotingForm({ festival, school, onVoteSaved, onClose }) {
   const { currentUser } = useAuth();
   const [formTemplate, setFormTemplate] = useState([]);
   const [scores, setScores] = useState({});
   const [comments, setComments] = useState('');
   const [loading, setLoading] = useState(true);
-  
+
   const isReadOnly = festival.estatus !== 'activo';
   const evaluationId = `${festival.id}_${school.id}_${currentUser.uid}`;
 
@@ -19,7 +19,7 @@ export default function VotingForm({ festival, school, onVoteSaved, onClose }) {
     const loadForm = async () => {
       if (!festival || !currentUser) return;
       setLoading(true);
-      
+
       try {
         const voteDocRef = doc(db, 'evaluaciones', evaluationId);
         const voteSnap = await getDoc(voteDocRef);
@@ -43,7 +43,7 @@ export default function VotingForm({ festival, school, onVoteSaved, onClose }) {
         const masterTemplate = templateSnap.data();
 
         const filteredTemplate = masterTemplate.categorias.map(cat => {
-          const relevantSubcats = cat.subcategorias.filter(subcat => 
+          const relevantSubcats = cat.subcategorias.filter(subcat =>
             assignedSubcatIds.includes(subcat.id)
           );
           return { ...cat, subcategorias: relevantSubcats };
@@ -78,7 +78,7 @@ export default function VotingForm({ festival, school, onVoteSaved, onClose }) {
       // Si el usuario borra el número, guardamos 'null'
       setScores(prev => ({
         ...prev,
-        [criterionId]: null, 
+        [criterionId]: null,
       }));
       return;
     }
@@ -86,7 +86,7 @@ export default function VotingForm({ festival, school, onVoteSaved, onClose }) {
     let numScore = Number(score);
     if (numScore > maxScore) numScore = maxScore;
     if (numScore < 0) numScore = 0;
-    
+
     setScores(prev => ({
       ...prev,
       [criterionId]: numScore,
@@ -105,10 +105,10 @@ export default function VotingForm({ festival, school, onVoteSaved, onClose }) {
     try {
       const totalScore = Object.values(scores).reduce((acc, score) => acc + (Number(score) || 0), 0);
       const allCriteria = formTemplate.flatMap(cat => cat.subcategorias.flatMap(sub => sub.criterios));
-      
+
       // --- CAMBIO 2: Chequear por 'null' o 'undefined' ---
       // Un criterio está "completo" solo si NO es null Y NO es undefined
-      const isComplete = allCriteria.every(criterion => 
+      const isComplete = allCriteria.every(criterion =>
         scores[criterion.id] != null // (esto chequea ambos, null y undefined)
       );
       // --- FIN CAMBIO 2 ---
@@ -125,7 +125,7 @@ export default function VotingForm({ festival, school, onVoteSaved, onClose }) {
         isComplete: isComplete, // Guardamos el estado correcto
         fechaEvaluacion: new Date()
       };
-      
+
       await setDoc(voteDocRef, evaluationData, { merge: true });
       alert('¡Evaluación guardada con éxito!');
       onVoteSaved(school.id, totalScore, isComplete);
@@ -140,6 +140,10 @@ export default function VotingForm({ festival, school, onVoteSaved, onClose }) {
 
   return (
     <div className="voting-form">
+      <div className="voting-form-header-mobile">
+        <h3>Evaluación</h3>
+        <button onClick={onClose} className="close-icon-button">✕</button>
+      </div>
       {formTemplate.map(category => (
         <fieldset key={category.id} className="form-category-group" disabled={isReadOnly}>
           <legend>{category.nombre}</legend>
@@ -149,13 +153,13 @@ export default function VotingForm({ festival, school, onVoteSaved, onClose }) {
               {subcat.criterios.map(criterion => (
                 <div key={criterion.id} className="criterion-input">
                   <label htmlFor={criterion.id}>{criterion.nombre}</label>
-                  
+
                   <div className="score-input-group">
                     <input
                       type="number"
                       id={criterion.id}
                       // --- CAMBIO 3: Usar '??' para mostrar '0' pero no 'null' ---
-                      value={scores[criterion.id] ?? ''} 
+                      value={scores[criterion.id] ?? ''}
                       max={criterion.puntajeMaximo}
                       min="0"
                       onChange={(e) => handleScoreChange(criterion.id, e.target.value, criterion.puntajeMaximo)}
@@ -184,14 +188,14 @@ export default function VotingForm({ festival, school, onVoteSaved, onClose }) {
 
       {!isReadOnly && (
         <div className="form-actions">
-          <button 
-            type="button" 
-            onClick={onClose} 
+          <button
+            type="button"
+            onClick={onClose}
             className="close-vote-button"
           >
             Cerrar
           </button>
-          
+
           <button onClick={handleSaveVote} className="save-vote-button">
             Guardar Cambios
           </button>

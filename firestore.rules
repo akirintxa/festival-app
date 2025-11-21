@@ -1,0 +1,62 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Función auxiliar para verificar si el usuario es Superadmin
+    function isSuperAdmin() {
+      return request.auth != null && 
+             get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol == 'superadmin';
+    }
+
+    // Función auxiliar para verificar si el usuario está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // --- COLECCIÓN: USUARIOS ---
+    match /usuarios/{userId} {
+      // Leer: El propio usuario puede leer su perfil, o un Superadmin puede leer cualquiera
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isSuperAdmin());
+      
+      // Escribir: Solo el Superadmin puede crear, editar o borrar usuarios
+      allow write: if isSuperAdmin();
+    }
+
+    // --- COLECCIÓN: FESTIVALES ---
+    match /festivales/{festivalId} {
+      // Leer: Cualquier usuario autenticado (Jueces y Admin)
+      allow read: if isAuthenticated();
+      
+      // Escribir: Solo Superadmin
+      allow write: if isSuperAdmin();
+    }
+
+    // --- COLECCIÓN: EVALUACIONES (Votos) ---
+    match /evaluaciones/{evaluacionId} {
+      // Leer: Superadmin ve todo. Juez ve solo las suyas.
+      allow read: if isSuperAdmin() || (isAuthenticated() && resource.data.juezId == request.auth.uid);
+      
+      // Crear: Juez puede crear si se asigna a sí mismo como autor
+      allow create: if isAuthenticated() && request.resource.data.juezId == request.auth.uid;
+      
+      // Actualizar: Juez puede editar sus propias evaluaciones (sin cambiar el autor)
+      allow update: if isAuthenticated() && 
+                    resource.data.juezId == request.auth.uid && 
+                    request.resource.data.juezId == request.auth.uid;
+                    
+      // Borrar: Solo Superadmin (o el juez si quisiéramos permitirlo, pero por seguridad mejor solo admin)
+      allow delete: if isSuperAdmin();
+    }
+
+    // --- COLECCIONES: PLANTILLAS ---
+    match /plantillasPenalizacion/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin();
+    }
+    
+    match /plantillaEvaluacion/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin();
+    }
+  }
+}

@@ -4,7 +4,7 @@
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  padding: 0; 
+  padding: 0;
   box-sizing: border-box;
   min-height: 100vh;
 }
@@ -26,13 +26,14 @@
   border-bottom: 1px solid #e0e0e0;
   background-color: white;
   width: 100%;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 .header-info {
   display: flex;
   flex-direction: column;
-  gap: 4px; /* Pequeño espacio entre los textos del header */
+  gap: 4px;
+  /* Pequeño espacio entre los textos del header */
 }
 
 .juez-festival-header h1 {
@@ -59,23 +60,31 @@
   text-transform: capitalize;
   line-height: 1.2;
   margin-top: 4px;
-  width: fit-content; /* Se ajusta al texto */
+  width: fit-content;
+  /* Se ajusta al texto */
 }
 
 .status-proximo {
-  background-color: #8e8e93; /* Gris */
+  background-color: #8e8e93;
+  /* Gris */
   color: white;
 }
+
 .status-activo {
-  background-color: #34c759; /* Verde */
+  background-color: #34c759;
+  /* Verde */
   color: white;
 }
+
 .status-en-revision {
-  background-color: #ff9500; /* Naranja - como en la captura */
+  background-color: #ff9500;
+  /* Naranja - como en la captura */
   color: white;
 }
+
 .status-finalizado {
-  background-color: #007aff; /* Azul */
+  background-color: #007aff;
+  /* Azul */
   color: white;
 }
 
@@ -87,7 +96,8 @@
   flex-shrink: 0;
   margin-left: 15px;
   font-size: 0.9rem;
-  align-self: flex-start; /* Se alinea con la parte de arriba */
+  align-self: flex-start;
+  /* Se alinea con la parte de arriba */
 }
 
 /* Estilos del Acordeón (Sin cambios) */
@@ -101,9 +111,9 @@
 .school-accordion-item {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  overflow: hidden;
+  /* overflow: hidden;  <-- Eliminado para evitar conflictos con position: sticky */
   background-color: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
 }
 
 .school-accordion-header {
@@ -137,7 +147,7 @@
   padding: 20px;
   border-radius: 8px;
   text-align: center;
-  margin: 20px; 
+  margin: 20px;
 }
 
 .school-name-header {
@@ -168,13 +178,16 @@
   .juez-festival-header h1 {
     font-size: 1.5rem;
   }
+
   .judge-name-display {
     font-size: 1rem;
   }
+
   .school-accordion-header {
     padding: 20px;
     font-size: 1.1rem;
   }
+
   .school-accordion-content {
     padding: 0 20px 20px 20px;
   }
@@ -186,6 +199,7 @@
 
 /* NUEVO: Estilo para el puntaje incompleto */
 .incomplete-score {
-  background-color: #ff3b30 !important; /* Rojo de alerta iOS */
+  background-color: #ff3b30 !important;
+  /* Rojo de alerta iOS */
   color: white !important;
 }
