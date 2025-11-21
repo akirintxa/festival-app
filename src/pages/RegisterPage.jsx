@@ -8,20 +8,20 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { signup } = useAuth();
+  const { registerSelf } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (nombre.trim() === '') { // <-- AÑADIDO: Validación simple
-        setError('Por favor, ingresa tu nombre.');
-        return;
+      setError('Por favor, ingresa tu nombre.');
+      return;
     }
     setError('');
     try {
       // Pasamos el nombre a la función de registro
-      await signup(email, password, nombre); // <-- MODIFICADO
-      navigate('/'); 
+      await registerSelf(email, password, nombre); // <-- MODIFICADO
+      navigate('/');
     } catch (err) {
       if (err.code === 'auth/email-already-in-use') {
         setError('Este correo electrónico ya está en uso.');

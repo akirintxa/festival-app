@@ -15,35 +15,60 @@ export function AuthProvider({ children }) {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  async function signup(email, password, nombre) {
-    let secondaryApp = null;
+  // Función para que un usuario se registre a sí mismo (Público)
+  async function registerSelf(email, password, nombre) {
     try {
-      // 1. Inicializar una app secundaria para no cerrar la sesión actual
-      secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
-      const secondaryAuth = getAuth(secondaryApp);
-
-      // 2. Crear usuario en la app secundaria
-      const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+      // 1. Crear usuario en Firebase Auth (loguea automáticamente)
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // 3. Crear el perfil en Firestore (usando la instancia principal 'db')
+      // 2. Crear perfil en Firestore
       const profileData = {
         uid: user.uid,
         email: user.email,
         nombre: nombre,
-        rol: "juez", // Rol por defecto
+        rol: "juez", // Rol por defecto para registros públicos
       };
       await setDoc(doc(db, "usuarios", user.uid), profileData);
 
-      // 4. Cerrar sesión en la app secundaria (por seguridad) y eliminarla
+      // 3. Actualizar estado local
+      setUserProfile(profileData);
+      return userCredential;
+    } catch (error) {
+      console.error("Error en auto-registro:", error);
+      throw error;
+    }
+  }
+
+  // Función para que un Admin cree otro usuario (Privado)
+  async function createUserByAdmin(email, password, nombre, rol = "juez") {
+    let secondaryApp = null;
+    try {
+      // 1. Inicializar app secundaria
+      secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
+      const secondaryAuth = getAuth(secondaryApp);
+
+      // 2. Crear usuario sin cerrar sesión actual
+      const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+      const user = userCredential.user;
+
+      // 3. Crear perfil en Firestore
+      const profileData = {
+        uid: user.uid,
+        email: user.email,
+        nombre: nombre,
+        rol: rol, // Usar el rol pasado por argumento
+      };
+      await setDoc(doc(db, "usuarios", user.uid), profileData);
+
+      // 4. Cerrar sesión en secundaria
       await signOut(secondaryAuth);
 
       return userCredential;
     } catch (error) {
-      console.error("Error al registrar y crear perfil:", error);
+      console.error("Error al crear usuario por admin:", error);
       throw error;
     } finally {
-      // 5. Limpieza: eliminar la instancia de la app secundaria
       if (secondaryApp) {
         await deleteApp(secondaryApp);
       }
@@ -129,7 +154,8 @@ export function AuthProvider({ children }) {
     currentUser,
     userProfile,
     loading, // Exponer loading es útil
-    signup,
+    registerSelf,
+    createUserByAdmin,
     login,
     logout
   };

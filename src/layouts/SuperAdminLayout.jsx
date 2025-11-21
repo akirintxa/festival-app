@@ -27,8 +27,6 @@ const Sidebar = () => {
         <NavLink to="/superadmin/festivales">Festivales</NavLink>
         <NavLink to="/superadmin/usuarios">Usuarios</NavLink>
         <NavLink to="/superadmin/plantillas">Plantilla de Evaluación</NavLink>
-        <NavLink to="/superadmin/penalizaciones">Penalizaciones</NavLink>
-        <NavLink to="/superadmin/dashboard">Dashboard</NavLink>
       </nav>
       <div className="sidebar-footer">
         <button onClick={handleLogout} className="btn btn-danger" style={{ width: '100%' }}>Cerrar Sesión</button>

@@ -1,5 +1,6 @@
 // src/components/modals/EditTemplateItemModal.jsx
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import './EditUserRoleModal.css';
 
 export default function EditTemplateItemModal({ item, itemType, onSave, onClose }) {
@@ -36,7 +37,7 @@ export default function EditTemplateItemModal({ item, itemType, onSave, onClose 
     onClose();
   };
 
-  return (
+  return ReactDOM.createPortal(
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h2>Editar {itemType.charAt(0).toUpperCase() + itemType.slice(1)}</h2>
@@ -65,6 +66,7 @@ export default function EditTemplateItemModal({ item, itemType, onSave, onClose 
           <button onClick={handleSave} className="button-save">Guardar</button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

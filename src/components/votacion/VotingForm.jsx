@@ -36,7 +36,8 @@ export default function VotingForm({ festival, school, onVoteSaved, onClose }) {
         }
         const assignedSubcatIds = judgeData.subcategoriasAsignadasIds || [];
 
-        const templateSnap = await getDoc(doc(db, "plantillaEvaluacion", "v1"));
+        const templateId = festival.plantillaId || "v1"; // Fallback para compatibilidad
+        const templateSnap = await getDoc(doc(db, "plantillaEvaluacion", templateId));
         if (!templateSnap.exists()) {
           console.error("Plantilla no encontrada"); setLoading(false); return;
         }
@@ -179,7 +180,7 @@ export default function VotingForm({ festival, school, onVoteSaved, onClose }) {
         <textarea
           id="comments"
           value={comments}
-          onChange={(e) => setComments(e.T.value)}
+          onChange={(e) => setComments(e.target.value)}
           rows="4"
           placeholder="Anotaciones sobre la presentación, vestuario, etc."
           readOnly={isReadOnly}

@@ -1,6 +1,6 @@
 // src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import './App.css';
 
@@ -20,7 +20,6 @@ import SuperAdminLayout from './layouts/SuperAdminLayout.jsx';
 import ManageUsersPage from './pages/ManageUsersPage.jsx';
 import ManageTemplatesPage from './pages/ManageTemplatesPage.jsx';
 import ManageFestivalsPage from './pages/ManageFestivalsPage.jsx';
-import ManagePenaltyTemplatesPage from './pages/ManagePenaltyTemplatesPage.jsx';
 import FestivalDetailPage from './pages/FestivalDetailPage.jsx'; // Usado solo por SuperAdmin
 
 // --- Páginas Juez ---
@@ -39,10 +38,10 @@ function App() {
 
           {/* --- RUTA PROTEGIDA PRINCIPAL (Redirige según rol) --- */}
           <Route path="/" element={<ProtectedRoute><RoleRouter /></ProtectedRoute>} />
-          
+
           {/* --- RUTA VISTA JUEZ --- */}
-          <Route 
-            path="/festival/:festivalId" 
+          <Route
+            path="/festival/:festivalId"
             element={<ProtectedRoute><div className="app-container"><JuezFestivalPage /></div></ProtectedRoute>}
           />
 
@@ -51,12 +50,10 @@ function App() {
             path="/superadmin"
             element={<ProtectedRoute requiredRole="superadmin"><SuperAdminLayout /></ProtectedRoute>}
           >
-            <Route index element={<SuperAdminHome />} />
-            <Route path="dashboard" element={<SuperAdminHome />} />
+            <Route index element={<Navigate to="festivales" replace />} />
             <Route path="usuarios" element={<ManageUsersPage />} />
             <Route path="plantillas" element={<ManageTemplatesPage />} />
             <Route path="festivales" element={<ManageFestivalsPage />} />
-            <Route path="penalizaciones" element={<ManagePenaltyTemplatesPage />} />
             <Route path="festival/:festivalId" element={<FestivalDetailPage />} />
           </Route>
 

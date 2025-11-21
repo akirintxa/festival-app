@@ -5,15 +5,16 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage"; // <--- 1. Agrega esta línea
 
-// Tu configuración de Firebase
+// Tu configuración de Firebase (usa variables de entorno)
 export const firebaseConfig = {
-  apiKey: "AIzaSyDxsIVi9_n1BonzYMNgd3_6RcdsuG2B4To",
-  authDomain: "festival-gaitas-app.firebaseapp.com",
-  projectId: "festival-gaitas-app",
-  storageBucket: "festival-gaitas-app.appspot.com",
-  messagingSenderId: "280953708023",
-  appId: "1:280953708023:web:cc559ea37abc30e8a462f2"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
+
 
 // Inicializa Firebase
 const app = initializeApp(firebaseConfig);

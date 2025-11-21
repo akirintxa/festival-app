@@ -1,5 +1,6 @@
 // src/components/modals/AddSubcategoryModal.jsx
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import './EditUserRoleModal.css'; // Reutilizamos estilos
 
 export default function AddSubcategoryModal({ onSave, onClose }) {
@@ -25,25 +26,25 @@ export default function AddSubcategoryModal({ onSave, onClose }) {
     });
   };
 
-  return (
+  return ReactDOM.createPortal(
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h2>Añadir Nueva Subcategoría</h2>
         {error && <p className="error-message">{error}</p>}
         <div className="form-group">
           <label>Nombre de la Subcategoría:</label>
-          <input 
-            type="text" 
-            value={nombre} 
-            onChange={(e) => setNombre(e.target.value)} 
+          <input
+            type="text"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
           />
         </div>
         <div className="form-group">
           <label>Peso (% sobre la categoría):</label>
-          <input 
-            type="number" 
-            value={peso} 
-            onChange={(e) => setPeso(e.target.value)} 
+          <input
+            type="number"
+            value={peso}
+            onChange={(e) => setPeso(e.target.value)}
           />
         </div>
         <div className="modal-actions">
@@ -51,6 +52,7 @@ export default function AddSubcategoryModal({ onSave, onClose }) {
           <button onClick={handleSave} className="button-save">Añadir</button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

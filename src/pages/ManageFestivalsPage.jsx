@@ -18,6 +18,36 @@ export default function ManageFestivalsPage() {
         id: doc.id,
         ...doc.data()
       }));
+
+      // Ordenar festivales
+      const statusPriority = {
+        'activo': 1,
+        'en_revision': 2,
+        'proximo': 3,
+        'finalizado': 4
+      };
+
+      festivalsList.sort((a, b) => {
+        const priorityA = statusPriority[a.estatus] || 99;
+        const priorityB = statusPriority[b.estatus] || 99;
+
+        if (priorityA !== priorityB) {
+          return priorityA - priorityB;
+        }
+
+        // Mismo estatus, ordenar por fecha
+        const dateA = new Date(a.fecha);
+        const dateB = new Date(b.fecha);
+
+        if (a.estatus === 'proximo') {
+          // Ascendente (el más cercano primero)
+          return dateA - dateB;
+        } else {
+          // Descendente (el más reciente primero) para activos, revisión y finalizados
+          return dateB - dateA;
+        }
+      });
+
       setFestivals(festivalsList);
     } catch (error) {
       console.error("Error al obtener los festivales: ", error);
@@ -94,6 +124,13 @@ export default function ManageFestivalsPage() {
             <div className="data-card-body">
               <p><strong>Fecha:</strong> {new Date(festival.fecha).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</p>
               <p><strong>Lugar:</strong> {festival.lugar}</p>
+              <p><strong>Colegios invitados:</strong> {festival.colegios?.length || 0}</p>
+              {festival.estatus === 'finalizado' && festival.ganador && (
+                <div style={{ marginTop: '10px', padding: '8px', backgroundColor: '#f0f9ff', borderRadius: '4px', border: '1px solid #bae6fd' }}>
+                  <span style={{ display: 'block', fontSize: '0.85rem', color: '#0284c7', fontWeight: 'bold' }}>🏆 Mejor agrupación:</span>
+                  <span style={{ fontSize: '1rem', fontWeight: 'bold', color: '#0f172a' }}>{festival.ganador.nombre}</span>
+                </div>
+              )}
             </div>
             <div className="data-card-footer">
               <Link to={`/superadmin/festival/${festival.id}`} className="btn btn-sm btn-outline-primary">

@@ -1,5 +1,6 @@
 // src/components/modals/AddCriterionModal.jsx
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import './EditUserRoleModal.css'; // Reutilizamos los mismos estilos
 
 export default function AddCriterionModal({ onSave, onClose }) {
@@ -24,25 +25,25 @@ export default function AddCriterionModal({ onSave, onClose }) {
     });
   };
 
-  return (
+  return ReactDOM.createPortal(
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h2>Añadir Nuevo Criterio</h2>
         {error && <p className="error-message">{error}</p>}
         <div className="form-group">
           <label>Nombre del Criterio:</label>
-          <input 
-            type="text" 
-            value={nombre} 
-            onChange={(e) => setNombre(e.target.value)} 
+          <input
+            type="text"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
           />
         </div>
         <div className="form-group">
           <label>Puntaje Máximo:</label>
-          <input 
-            type="number" 
-            value={puntajeMaximo} 
-            onChange={(e) => setPuntajeMaximo(e.target.value)} 
+          <input
+            type="number"
+            value={puntajeMaximo}
+            onChange={(e) => setPuntajeMaximo(e.target.value)}
           />
         </div>
         <div className="modal-actions">
@@ -50,6 +51,7 @@ export default function AddCriterionModal({ onSave, onClose }) {
           <button onClick={handleSave} className="button-save">Añadir</button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -73,8 +73,25 @@ export default function JuezDashboard() {
           <span className="judge-name-display">{userProfile?.nombre || userProfile?.email}</span>
         </div>
         {/* --- 3. Añadir icono al botón --- */}
-        <button onClick={handleLogout} className="btn btn-danger" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <IoMdLogOut /> Cerrar Sesión
+        <button
+          onClick={handleLogout}
+          className="btn-icon-logout"
+          title="Cerrar Sesión"
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: '#ef4444',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '8px',
+            borderRadius: '50%',
+            transition: 'background 0.2s'
+          }}
+          onMouseOver={(e) => e.currentTarget.style.background = '#fee2e2'}
+          onMouseOut={(e) => e.currentTarget.style.background = 'none'}
+        >
+          <IoMdLogOut size={28} />
         </button>
       </div>
 

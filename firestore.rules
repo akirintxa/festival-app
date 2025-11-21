@@ -18,8 +18,14 @@ service cloud.firestore {
       // Leer: El propio usuario puede leer su perfil, o un Superadmin puede leer cualquiera
       allow read: if isAuthenticated() && (request.auth.uid == userId || isSuperAdmin());
       
-      // Escribir: Solo el Superadmin puede crear, editar o borrar usuarios
-      allow write: if isSuperAdmin();
+      // Crear: Un usuario puede crear su propio perfil al registrarse
+      // PERO no puede asignarse el rol de superadmin
+      allow create: if isAuthenticated() && 
+                    request.auth.uid == userId &&
+                    request.resource.data.rol != 'superadmin';
+
+      // Actualizar/Borrar: Solo Superadmin
+      allow update, delete: if isSuperAdmin();
     }
 
     // --- COLECCIÓN: FESTIVALES ---
@@ -33,8 +39,12 @@ service cloud.firestore {
 
     // --- COLECCIÓN: EVALUACIONES (Votos) ---
     match /evaluaciones/{evaluacionId} {
-      // Leer: Superadmin ve todo. Juez ve solo las suyas.
-      allow read: if isSuperAdmin() || (isAuthenticated() && resource.data.juezId == request.auth.uid);
+      // Leer: Superadmin ve todo. Juez ve solo las suyas (basado en contenido O en ID para documentos nuevos).
+      allow read: if isSuperAdmin() || 
+                  (isAuthenticated() && (
+                    (resource != null && resource.data.juezId == request.auth.uid) || 
+                    evaluacionId.matches('.*_' + request.auth.uid)
+                  ));
       
       // Crear: Juez puede crear si se asigna a sí mismo como autor
       allow create: if isAuthenticated() && request.resource.data.juezId == request.auth.uid;
@@ -55,6 +65,12 @@ service cloud.firestore {
     }
     
     match /plantillaEvaluacion/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin();
+    }
+
+    // --- COLECCIÓN: PENALIZACIONES APLICADAS ---
+    match /penalizacionesAplicadas/{document=**} {
       allow read: if isAuthenticated();
       allow write: if isSuperAdmin();
     }
