@@ -18,14 +18,13 @@ service cloud.firestore {
       // Leer: El propio usuario puede leer su perfil, o un Superadmin puede leer cualquiera
       allow read: if isAuthenticated() && (request.auth.uid == userId || isSuperAdmin());
       
-      // Crear: Un usuario puede crear su propio perfil al registrarse
-      // PERO no puede asignarse el rol de superadmin
+      // Crear: Auto-registro (no permite ser superadmin)
       allow create: if isAuthenticated() && 
-                    request.auth.uid == userId &&
+                    request.auth.uid == userId && 
                     request.resource.data.rol != 'superadmin';
 
-      // Actualizar/Borrar: Solo Superadmin
-      allow update, delete: if isSuperAdmin();
+      // Escritura completa (Crear, Editar, Borrar): Solo Superadmin
+      allow write: if isSuperAdmin();
     }
 
     // --- COLECCIÓN: FESTIVALES ---

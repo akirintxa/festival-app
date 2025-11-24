@@ -4,11 +4,11 @@ import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firesto
 import { db } from '../../firebaseConfig';
 import './EditUserRoleModal.css';
 
-export default function AssignJudgeModal({ onSave, onClose, alreadyAssignedIds, existingAssignments = [] }) {
+export default function AssignJudgeModal({ onSave, onClose, alreadyAssignedIds, existingAssignments = [], plantilla }) {
   const [allJudges, setAllJudges] = useState([]);
-  const [template, setTemplate] = useState(null);
+  // const [template, setTemplate] = useState(null); // Ya no necesitamos estado local para template
   const [selectedJudgeId, setSelectedJudgeId] = useState('');
-  const [assignedSubcatIds, setAssignedSubcatIds] = useState(existingAssignments); // 👈 Guardamos IDs
+  const [assignedSubcatIds, setAssignedSubcatIds] = useState(existingAssignments);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -20,12 +20,6 @@ export default function AssignJudgeModal({ onSave, onClose, alreadyAssignedIds, 
         .map(d => ({ id: d.id, ...d.data() }))
         .filter(j => !alreadyAssignedIds.includes(j.id));
       setAllJudges(availableJudges);
-
-      // 2. Obtener plantilla
-      const templateSnap = await getDoc(doc(db, "plantillaEvaluacion", "v1"));
-      if (templateSnap.exists()) {
-        setTemplate(templateSnap.data());
-      }
     };
     fetchData();
   }, [alreadyAssignedIds]);
@@ -44,8 +38,8 @@ export default function AssignJudgeModal({ onSave, onClose, alreadyAssignedIds, 
       return;
     }
     const selectedJudge = allJudges.find(j => j.id === selectedJudgeId);
-    
-    const assignedSubcatNames = template.categorias
+
+    const assignedSubcatNames = plantilla.categorias
       .flatMap(c => c.subcategorias)
       .filter(sc => assignedSubcatIds.includes(sc.id))
       .map(sc => sc.nombre);
@@ -64,7 +58,7 @@ export default function AssignJudgeModal({ onSave, onClose, alreadyAssignedIds, 
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h2>Asignar Juez a Festival</h2>
         {error && <p className="error-message">{error}</p>}
-        
+
         <div className="form-group">
           <label>Seleccionar Juez:</label>
           <select value={selectedJudgeId} onChange={(e) => setSelectedJudgeId(e.target.value)}>
@@ -77,7 +71,7 @@ export default function AssignJudgeModal({ onSave, onClose, alreadyAssignedIds, 
 
         <div className="form-group">
           <label>Asignar Subcategorías a Evaluar:</label>
-          {template?.categorias.map(cat => (
+          {plantilla?.categorias.map(cat => (
             <div key={cat.id} className="category-group">
               <h4>{cat.nombre}</h4>
               <div className="checkbox-group">

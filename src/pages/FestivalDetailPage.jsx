@@ -44,18 +44,22 @@ export default function FestivalDetailPage() {
           setFestival(festivalData);
           setSchools(festivalData.colegios || []);
           setAssignedJudges(festivalData.juecesAsignadosData || []);
+
+          // 2. Obtener la plantilla asociada (AHORA DENTRO DEL IF)
+          const templateId = festivalData.plantillaId || "v1";
+          const templateSnap = await getDoc(doc(db, "plantillaEvaluacion", templateId));
+
+          if (templateSnap.exists()) {
+            setPlantilla({ id: templateSnap.id, ...templateSnap.data() });
+          } else {
+            console.error(`No se encontró la plantilla de evaluación con ID: ${templateId}`);
+            // Opcional: Mostrar alerta al usuario
+          }
         } else {
           console.error("No se encontró el festival.");
           alert("Festival no encontrado.");
           // navigate a /superadmin/festivales (ya no es dinámico)
           // No podemos usar navigate sin el hook, pero Link funcionará
-        }
-
-        const templateSnap = await getDoc(doc(db, "plantillaEvaluacion", "v1"));
-        if (templateSnap.exists()) {
-          setPlantilla(templateSnap.data());
-        } else {
-          console.error("No se encontró la plantilla de evaluación.");
         }
       } catch (error) {
         console.error("Error al obtener datos:", error);
@@ -233,6 +237,7 @@ export default function FestivalDetailPage() {
 
       {isJudgeModalOpen && canManageParticipants && (
         <AssignJudgeModal
+          plantilla={plantilla} // 👈 Pasamos la plantilla correcta
           alreadyAssignedIds={assignedJudges.map(j => j.juezId)}
           onSave={handleAssignJudge}
           onClose={() => setIsJudgeModalOpen(false)}
